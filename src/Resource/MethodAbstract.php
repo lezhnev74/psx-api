@@ -45,6 +45,12 @@ abstract class MethodAbstract
     protected $description;
 
     /**
+     * This is our defined extension to generate implementation code
+     * @var array {class, method}
+     */
+    protected $xImplementation;
+
+    /**
      * @var \PSX\Schema\PropertyInterface
      */
     protected $queryParameters;
@@ -72,7 +78,12 @@ abstract class MethodAbstract
     public function __construct()
     {
         $this->queryParameters = Property::getObject()->setTitle('query');
-        $this->responses       = [];
+        $this->responses = [];
+    }
+
+    public function getOperationId()
+    {
+        return $this->operationId;
     }
 
     public function setOperationId($operationId)
@@ -82,9 +93,9 @@ abstract class MethodAbstract
         return $this;
     }
 
-    public function getOperationId()
+    public function getDescription()
     {
-        return $this->operationId;
+        return $this->description;
     }
 
     public function setDescription($description)
@@ -92,11 +103,6 @@ abstract class MethodAbstract
         $this->description = $description;
 
         return $this;
-    }
-
-    public function getDescription()
-    {
-        return $this->description;
     }
 
     public function addQueryParameter($name, PropertyInterface $property = null)
@@ -116,16 +122,16 @@ abstract class MethodAbstract
         return count($this->queryParameters->getProperties() ?: []) > 0;
     }
 
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
     public function setRequest(SchemaInterface $schema)
     {
         $this->request = $schema;
 
         return $this;
-    }
-
-    public function getRequest()
-    {
-        return $this->request;
     }
 
     public function hasRequest()
@@ -159,6 +165,11 @@ abstract class MethodAbstract
         return isset($this->responses[$statusCode]);
     }
 
+    public function getSecurity()
+    {
+        return $this->security;
+    }
+
     public function setSecurity($name, array $scopes)
     {
         $this->security[$name] = $scopes;
@@ -166,9 +177,9 @@ abstract class MethodAbstract
         return $this;
     }
 
-    public function getSecurity()
+    public function getTags()
     {
-        return $this->security;
+        return $this->tags;
     }
 
     public function setTags(array $tags)
@@ -178,10 +189,22 @@ abstract class MethodAbstract
         return $this;
     }
 
-    public function getTags()
+    /**
+     * @return array
+     */
+    public function getXImplementation(): array
     {
-        return $this->tags;
+        return $this->xImplementation;
     }
+
+    /**
+     * @param array $xImplementation
+     */
+    public function setXImplementation(array $xImplementation)
+    {
+        $this->xImplementation = $xImplementation;
+    }
+
 
     /**
      * Returns the uppercase name of the method
